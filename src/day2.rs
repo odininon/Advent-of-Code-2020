@@ -3,8 +3,8 @@ use nom::character::complete::{anychar, space0};
 use nom::character::streaming::digit1;
 use nom::combinator::opt;
 use nom::error::VerboseError;
-use nom::IResult;
 use nom::sequence::{separated_pair, terminated, tuple};
+use nom::IResult;
 
 #[derive(Debug)]
 struct PasswordPolicy {
@@ -24,22 +24,22 @@ fn letter(s: &str) -> Res<&str, char> {
 }
 
 fn parse(s: &str) -> Res<&str, PasswordPolicy> {
-    tuple((
-        occurrence,
-        letter,
-    ))(s).map(|(next_input, output)| {
-        let ((min, max), letter, ) = output;
-        (next_input, PasswordPolicy {
-            letter,
-            min_occurrence: min.parse().unwrap(),
-            max_occurrence: max.parse().unwrap(),
-        })
+    tuple((occurrence, letter))(s).map(|(next_input, output)| {
+        let ((min, max), letter) = output;
+        (
+            next_input,
+            PasswordPolicy {
+                letter,
+                min_occurrence: min.parse().unwrap(),
+                max_occurrence: max.parse().unwrap(),
+            },
+        )
     })
 }
 
 fn is_valid_password_part_1(policy: PasswordPolicy, password: &str) -> bool {
     let t = password.chars();
-    let len = t.filter(|&c| c == policy.letter).collect::<Vec<char>>().len();
+    let len = t.filter(|&c| c == policy.letter).count();
 
     len >= policy.min_occurrence && len <= policy.max_occurrence
 }
@@ -52,7 +52,7 @@ fn is_valid_password_part_2(policy: PasswordPolicy, password: &str) -> bool {
     first ^ second
 }
 
-fn solve(input: &Vec<String>, fun: fn(PasswordPolicy, &str) -> bool) -> i32 {
+fn solve(input: &[String], fun: fn(PasswordPolicy, &str) -> bool) -> i32 {
     let mut res = 0;
 
     for line in input {
@@ -67,5 +67,8 @@ fn solve(input: &Vec<String>, fun: fn(PasswordPolicy, &str) -> bool) -> i32 {
 }
 
 pub fn solution(input: Vec<String>) -> [i32; 2] {
-    [solve(&input, is_valid_password_part_1), solve(&input, is_valid_password_part_2)]
+    [
+        solve(&input, is_valid_password_part_1),
+        solve(&input, is_valid_password_part_2),
+    ]
 }

@@ -1,10 +1,13 @@
 pub fn solution(input: Vec<String>) -> [i32; 2] {
-    let numbers = input.into_iter().map(|s| s.parse().unwrap()).collect::<Vec<i32>>();
+    let numbers = input
+        .into_iter()
+        .map(|s| s.parse().unwrap())
+        .collect::<Vec<i32>>();
 
-    return [part1(&numbers), part2(&numbers)];
+    [part1(&numbers), part2(&numbers)]
 }
 
-fn part1(numbers: &Vec<i32>) -> i32 {
+fn part1(numbers: &[i32]) -> i32 {
     for number1 in numbers {
         for number2 in numbers {
             if number1 + number2 == 2020 {
@@ -13,10 +16,10 @@ fn part1(numbers: &Vec<i32>) -> i32 {
         }
     }
 
-    return -1;
+    -1
 }
 
-fn part2(numbers: &Vec<i32>) -> i32 {
+fn part2(numbers: &[i32]) -> i32 {
     for number1 in numbers {
         for number2 in numbers {
             for number3 in numbers {
@@ -27,5 +30,5 @@ fn part2(numbers: &Vec<i32>) -> i32 {
         }
     }
 
-    return -1;
+    -1
 }

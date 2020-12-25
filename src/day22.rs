@@ -1,14 +1,12 @@
 #[derive(Debug, Clone, Eq, PartialEq)]
 struct Deck {
-    cards: Vec<i32>
+    cards: Vec<i32>,
 }
 
 impl Deck {
     fn new(mut cards: Vec<i32>) -> Self {
         cards.reverse();
-        Deck {
-            cards,
-        }
+        Deck { cards }
     }
 
     fn play_card(&mut self) -> i32 {
@@ -73,11 +71,19 @@ impl Game {
             self.play_round()
         }
 
-        if self.player1.cards.len() == 0 as usize { Player::Player2 } else { Player::Player1 }
+        if self.player1.cards.len() == 0 as usize {
+            Player::Player2
+        } else {
+            Player::Player1
+        }
     }
 
     fn final_score(&self) -> i32 {
-        let deck_to_score = if self.player1.cards.len() == 0 as usize { &self.player2 } else { &self.player1 };
+        let deck_to_score = if self.player1.cards.len() == 0 as usize {
+            &self.player2
+        } else {
+            &self.player1
+        };
 
         deck_to_score.score()
     }
@@ -121,7 +127,9 @@ impl RecursionGame {
             let player1_card = self.player1.play_card();
             let player2_card = self.player2.play_card();
 
-            if player1_card as usize <= self.player1.cards.len() && player2_card as usize <= self.player2.cards.len() {
+            if player1_card as usize <= self.player1.cards.len()
+                && player2_card as usize <= self.player2.cards.len()
+            {
                 let mut new_player1_deck = vec![];
                 let mut player_1_copy = self.player1.cards.clone();
                 while new_player1_deck.len() < player1_card as usize {
@@ -140,27 +148,31 @@ impl RecursionGame {
 
                 let mut new_game = RecursionGame::new(&deck1, &deck2);
                 match new_game.play() {
-                    Player::Player1 => {
-                        self.player1.win_cards(vec![player1_card, player2_card])
-                    }
+                    Player::Player1 => self.player1.win_cards(vec![player1_card, player2_card]),
                     Player::Player2 => {
                         self.player2.win_cards(vec![player2_card, player1_card]);
                     }
                 }
+            } else if player1_card > player2_card {
+                self.player1.win_cards(vec![player1_card, player2_card])
             } else {
-                if player1_card > player2_card {
-                    self.player1.win_cards(vec![player1_card, player2_card])
-                } else {
-                    self.player2.win_cards(vec![player2_card, player1_card])
-                }
+                self.player2.win_cards(vec![player2_card, player1_card])
             }
         }
 
-        if self.player1.cards.len() == 0 as usize { Player::Player2 } else { Player::Player1 }
+        if self.player1.cards.len() == 0 as usize {
+            Player::Player2
+        } else {
+            Player::Player1
+        }
     }
 
     fn final_score(&self) -> i32 {
-        let deck_to_score = if self.player1.cards.len() == 0 as usize { &self.player2 } else { &self.player1 };
+        let deck_to_score = if self.player1.cards.len() == 0 as usize {
+            &self.player2
+        } else {
+            &self.player1
+        };
 
         deck_to_score.score()
     }
@@ -169,8 +181,14 @@ impl RecursionGame {
 pub fn solution(_input: Vec<String>) -> [i32; 2] {
     // let player1 = Deck::new(vec![9, 2, 6, 3, 1]);
     // let player2 = Deck::new(vec![5, 8, 4, 7, 10]);
-    let player1 = Deck::new(vec![41, 33, 20, 32, 7, 45, 2, 12, 14, 29, 49, 37, 6, 11, 39, 46, 47, 38, 23, 22, 28, 10, 36, 35, 24]);
-    let player2 = Deck::new(vec![17, 4, 44, 9, 27, 18, 30, 42, 21, 26, 16, 48, 8, 15, 34, 50, 19, 43, 25, 1, 13, 31, 3, 5, 40]);
+    let player1 = Deck::new(vec![
+        41, 33, 20, 32, 7, 45, 2, 12, 14, 29, 49, 37, 6, 11, 39, 46, 47, 38, 23, 22, 28, 10, 36,
+        35, 24,
+    ]);
+    let player2 = Deck::new(vec![
+        17, 4, 44, 9, 27, 18, 30, 42, 21, 26, 16, 48, 8, 15, 34, 50, 19, 43, 25, 1, 13, 31, 3, 5,
+        40,
+    ]);
 
     let mut game = Game::new(&player1, &player2);
     game.play();
